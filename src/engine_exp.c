@@ -89,10 +89,6 @@ static void	engine_ceil_floor(t_player *pl, int x, int *z, int neib)
 	pl->ceil.cya = clamp(pl->floor.ya, pl->y_top[x], pl->y_bot[x]);// top
 	pl->floor.yb = (x - pl->x1) * (pl->floor.y2b - pl->floor.y1b) / (pl->x2 - pl->x1) + pl->floor.y1b;
 	pl->ceil.cyb = clamp(pl->floor.yb, pl->y_top[x], pl->y_bot[x]);// bottom
-	//Render ceiling: everything above this sector's ceiling height.
-	//vline(x, pl->y_top[x], pl->ceil.cya - 1, 0xffffff, 0x222222 , 0xff0000, pl->srf);//ceiling colors
-	//Render floor: everything below this sector's floor height.
-	//vline(x, pl->ceil.cyb + 1, pl->y_bot[x], 0x00ff00, 0x0000AA, 0x0000FF, pl->srf);
     /*  NEW CODOE FOR TEXTURES CEIL AND FLOOR*/
 
     t_textures t;
@@ -112,9 +108,9 @@ static void	engine_ceil_floor(t_player *pl, int x, int *z, int neib)
         t.mapx = t.mapz * (WIN_W/2 - (float)t.x) / (WIN_W * (H_FOV));
         t.txtx1 = (unsigned int)(((t.mapz * pl->anglecos + t.mapx * pl->anglesin) + pl->where.x) * 256);
         t.txtz = (unsigned int)(((t.mapz * pl->anglesin - t.mapx * pl->anglecos) + pl->where.y) * 256);
-        if (t.y < pl->ceil.cya)
+        if (t.y < pl->ceil.cya )//pl->s != 0)// && pl->s != 1)
             pix1(&t, pl, CEIL);
-        else
+        if (t.y >= pl->ceil.cya)// && pl->s != 0 && pl->s != 1)
             pix1(&t, pl, FLOOR);
 
     }
@@ -135,12 +131,9 @@ static void	engine_ceil_floor(t_player *pl, int x, int *z, int neib)
         pl->y1 = pl->ceil.cya;
         pl->y2 = pl->ceil.cnya;
         vline_walls(x, pl, scalar_create(a,b,c,d,f), WALL1);
-		//col = 0xff0000 * (255 - *z);//color from floor to ceil(wall top)
-		//vline(x, pl->ceil.cya, pl->ceil.cnya - 1, 0xff0000, (x == pl->x1) || (x == pl->x2) ? 0 : col, 0x00ff00, pl->srf); //Line Between our and their ceiling
+        if ( pl->cycle.rend_sec == 0)
+            vline_graffiti(x, pl, scalar_create(a,b,c,d,f), GRAFFITI);
 		pl->y_top[x] = clamp(max(pl->ceil.cya, pl->ceil.cnya), pl->y_top[x], WIN_H-1);   // Shrink the remaining window below these ceilings
-		//If our floor is lower than their floor, render bottom wall
-		//col = 0x00ff00 * (31 - *z / 8);//color from ceil to floor(wall bottom)
-		//vline(x, pl->ceil.cnyb+1, pl->ceil.cyb, 0, (x == pl->x1) || (x == pl->x2) ? 0 : col, 0, pl->srf); // Between their and our floor
 		pl->y_bot[x] = clamp(min(pl->ceil.cyb, pl->ceil.cnyb), 0, pl->y_bot[x]); // Shrink the remaining window above these floors
         a = pl->floor.ya;
         b = pl->ceil.cnyb + 1;
@@ -150,7 +143,6 @@ static void	engine_ceil_floor(t_player *pl, int x, int *z, int neib)
         pl->y1 = pl->ceil.cnyb + 1;
         pl->y2 = pl->ceil.cyb;
         vline_walls(x, pl, scalar_create(a,b,c,d,f), WALL1);
-        //vline(x, pl->ceil.cnyb+1, pl->ceil.cyb, 0xff0000, (x == pl->x1) || (x == pl->x2) ? 0 : col, 0x00ff00, pl->srf);
     }
 }
 /*
@@ -164,33 +156,29 @@ void		engine_put_lines(t_player *pl, int neib)
 {
 	int			z;
 	int			x;
-	unsigned	col;
 
 	pl->beginx = (int)fmax((double)pl->x1, (double)pl->cycle.current->sx1);
 	pl->endx = (int)fmin((double)pl->x2, (double)pl->cycle.current->sx2);
 	x = pl->beginx;
+
 	while (++x <= pl->endx)
 	{
         pl->txtx = (int)((pl->u0 * ((pl->x2 - x) * pl->t2.y) + pl->u1 * ((x - pl->x1) * pl->t1.y)) / ((pl->x2 - x) * pl->t2.y + (x - pl->x1) * pl->t1.y));
 		engine_ceil_floor(pl, x, &z, neib);//ceil floor and some walls
+        int a,b,c,d,f;
+        a = pl->floor.ya ;
+        b = pl->ceil.cya;
+        c = pl->floor.yb ;
+        d = 0;
+        f = pl->srf->w - 1;
+        pl->y1 = pl->ceil.cya;
+        pl->y2 = pl->ceil.cyb;
+
 		if(neib < 0)
 		{
-			//There's no neighbor. Render wall from top (cya = ceiling level) to bottom (cyb = floor level).
-			col = 0x0000ff * (255 - z);
-
-            int a,b,c,d,f;
-			a = pl->floor.ya ;
-            b = pl->ceil.cya;
-            c = pl->floor.yb ;
-            d = 0;
-            f = pl->srf->w - 1;
-            pl->y1 = pl->ceil.cya;
-            pl->y2 = pl->ceil.cyb;
             vline_walls(x, pl, scalar_create(a,b,c,d,f), WALL1);
-            //vline(x, pl->ceil.cya, pl->ceil.cyb, 0xff0000, 0, 0x00ff00, pl->srf);
 		}
 	}
-	//Schedule the neighboring sector for rendering within the window formed by this wall.
 	if(neib >= 0 && pl->endx >= pl->beginx && (pl->cycle.head + MAX_QUEUE + 1 - pl->cycle.tail) % MAX_QUEUE)
 	{
 		pl->cycle.head->sec_nb = neib;

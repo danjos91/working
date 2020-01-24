@@ -47,6 +47,7 @@ typedef struct	s_player
 	float       light;
 	int       y1;
 	int       y2;
+	int        s;
 
 }				t_player;
 

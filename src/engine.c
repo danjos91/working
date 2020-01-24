@@ -117,8 +117,11 @@ void	engine_begin(t_player *pl)
 			continue;
 		while (++s < pl->sect->npoints)
 		{
+		    pl->s = s;
 			if (engine_cross(pl, pl->cycle.current->sec_nb, s) == 0)
 				continue;
+//			if (pl->cycle.current->sec_nb == 0)
+
 			//Acquire the floor and ceiling heights, relative to where the player's view is
 			pl->ceil.yceil = pl->sect->ceil - pl->where.z;
 			pl->floor.yfloor = pl->sect->floor - pl->where.z;

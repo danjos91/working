@@ -28,8 +28,8 @@ void		draw_cur_pistol_sprite(t_weapons *wpn, int width,
             x_num += 0.3;//width of the gun and hand
             x = (int)x_num;
             if (wpn->pistol_sprite[cur_sprite][y][x] != 0x000000)
-                pix[height * WIN_W + x_img] =
-                        wpn->pistol_sprite[cur_sprite][y][x];
+                    pix[height * WIN_W + x_img] =
+                            color_transoform(wpn->pistol_sprite[cur_sprite][y][x], 0.7);
             x_img++;
         }
         y_num += 0.5;
@@ -86,8 +86,10 @@ SDL_Surface		*load_pistol_part(int sprite)
     SDL_Surface *tmp;
      cur_sprite = NULL;
 
-    if (sprite == 0)
+    if (sprite == 0) {
         cur_sprite = IMG_Load("sprites/pistol1.png");
+        cur_sprite= SDL_ConvertSurfaceFormat(cur_sprite, SDL_PIXELFORMAT_ARGB8888, 0);
+    }
     else if (sprite == 1)
         cur_sprite = IMG_Load("sprites/pistol2.png");
     else if (sprite == 2)
@@ -105,17 +107,16 @@ SDL_Surface		*load_pistol_part(int sprite)
     return (cur_sprite);
 }
 
-void			draw_pistol(t_weapons *wpn, SDL_Surface *surface)
+void			draw_pistol(t_weapons *wpn, t_player *pl)
 {
     static float velocity;//how fast are we going to see the animation of the gun
     if (wpn->sprite_counter == 1)
-        draw_cur_pistol_sprite(wpn, WIN_W - 400, WIN_H - 250, 0, surface);
+        draw_cur_pistol_sprite(wpn, WIN_W - 400, WIN_H - 250, 0, pl->srf);
     else if (wpn->sprite_counter > 1)
     {
-        //velocity = 0;
         if(velocity < 3)
         {
-            draw_cur_pistol_sprite(wpn, WIN_W - 400, WIN_H - 250, wpn->sprite_counter - 1, surface);
+            draw_cur_pistol_sprite(wpn, WIN_W - 400, WIN_H - 250, wpn->sprite_counter - 1, pl->srf);
             velocity += 0.05f;
         } else
             velocity = 0;

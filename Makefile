@@ -17,9 +17,9 @@ FLAGS = -Wall -Werror -Wextra -O -O0 -O1 -O2 -O3 -Os -g
 CC = gcc
 
 LIBRARIES = -lft -L$(LIBFT_DIRECTORY)\
-	-lSDL2 -lSDL2main -L/Users/nshelly/.brew/Cellar/sdl2/2.0.10/lib\
-	-lSDL2_ttf -L/Users/nshelly/.brew/Cellar/sdl2_ttf/2.0.15/lib\
-	-lSDL2_image -L/Users/nshelly/.brew/Cellar/sdl2_image/2.0.5/lib
+	-lSDL2 -lSDL2main -L/Users/${USER}/.brew/Cellar/sdl2/2.0.10/lib\
+	-lSDL2_ttf -L/Users/${USER}/.brew/Cellar/sdl2_ttf/2.0.15/lib\
+	-lSDL2_image -L/Users/${USER}/.brew/Cellar/sdl2_image/2.0.5/lib
 
 INCLUDES = -I$(HEADERS_DIRECTORY) -I$(LIBFT_HEADERS)\
 	

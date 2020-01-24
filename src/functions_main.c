@@ -13,9 +13,7 @@ int sub_events(t_subevents *se, t_player *pl)
         se->wsad[2] = se->ev.type == SDL_KEYDOWN;
     if (se->ev.key.keysym.sym == 'd')
         se->wsad[3] = (se->ev.type == SDL_KEYDOWN);
-	//if (se->ev.key.keysym.sym == 'e' && (se->ev.type == SDL_KEYDOWN))
-	//	door_button(pl, se);
-        
+
 	
     if (se->ev.key.keysym.sym == SDLK_ESCAPE)//quit
     {
@@ -27,12 +25,9 @@ int sub_events(t_subevents *se, t_player *pl)
     {
         pl->count_sprite = 2;
     }
-    if (se->ev.key.keysym.sym == SDLK_l)
+    if (se->ev.key.keysym.sym == 'l')
     {
-        if (pl->light == 0.5)
-            pl->light = 1;
-        else
-            pl->light = 0.5f;
+        se->wsad[5] = (se->ev.type == SDL_KEYDOWN);
     }
     if (se->ev.key.keysym.sym == ' ')//jump
         if (se->ground)
@@ -121,6 +116,15 @@ void vectors_vel_dir(t_player *pl, t_subevents *se, t_others *ot)//for flying
         ot->move_vec[0] -= pl->anglesin * 0.2f;
         ot->move_vec[1] += pl->anglecos * 0.2f;
     }
+    if (se->wsad[5])
+    {
+
+        if (pl->light == 0.5)
+            pl->light = 1;
+        else
+            pl->light = 0.5f;
+    }
+
     int pushing = se->wsad[0] || se->wsad[1] || se->wsad[2] || se->wsad[3];
     float acceleration = pushing ? 0.4 : 0.2;
     pl->velocity.x = pl->velocity.x * (1 - acceleration) + ot->move_vec[0] * acceleration;

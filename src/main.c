@@ -165,6 +165,7 @@ int main(int ac, char **ag)
     else
     {
         window = SDL_CreateWindow( "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIN_W, WIN_H, SDL_WINDOW_SHOWN );
+        SDL_SetWindowOpacity( window, 1.0f);
 
         if( window == NULL )
         {
@@ -180,6 +181,7 @@ int main(int ac, char **ag)
             se.wsad[1] = 0;
             se.wsad[2] = 0;
             se.wsad[3] = 0;
+            se.wsad[5] = 0;
             se.falling = 1;
             pl.count_sprite = 1;
             se.ground = 0;
@@ -193,16 +195,20 @@ int main(int ac, char **ag)
             while (!se.quit)
             {
                 pl.txtx = 0;
+
+                //SDL_BlitSurface(pl.img[3], ft_create_rect(WIN_W, WIN_H, 0, 0), pl.srf, ft_create_rect(0, 0, 0, 0));
+                //SDL_BlitSurface(w.weapon_texture, ft_create_rect(15, 15, 0, 0), pl.srf, ft_create_rect(WIN_W, WIN_H, WIN_W, WIN_H));
 				engine_begin(&pl);
 				
 				scr_surf = SDL_GetWindowSurface(window);
-				SDL_BlitSurface(w.weapon_texture, ft_create_rect(15, 15, 0, 0), scr_surf, ft_create_rect(50, 50, WIN_W / 2, WIN_H / 2));
+
+				//SDL_BlitSurface(pl.img[4], ft_create_rect(15, 15, 0, 0), pl.srf, ft_create_rect(50, 50, WIN_H/2, WIN_W/2));
 				if (pl.count_sprite == 10)// this for the event shoot
 				{
                     wpn.sprite_counter = 2;
                     pl.count_sprite = 1;
 				}
-				draw_pistol(&wpn,pl.srf);//draw gun
+				draw_pistol(&wpn,&pl);//draw gun
                 SDL_UpdateWindowSurface( window );
 
                 //Vertical collision detection
