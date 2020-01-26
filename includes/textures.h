@@ -7,6 +7,7 @@
 # define H_FOV					(1.0 * 0.73f * WIN_H / WIN_W)
 # define V_FOV					(1.0 * .2f)
 # define CEIL   0
+# define CEI2  6
 # define FLOOR  1
 # define WALL1   2
 # define WALL2   3
@@ -34,20 +35,12 @@ typedef struct			s_scaler
     int					cache;
 }						t_scaler;
 
-typedef	struct			s_weapons
-{
-    int					pistol_sprite[6][128][128];
-    int					***lighter_sprite;
-    int					type;
-    double				sprite_counter;
-}						t_weapons;
-
 void		draw_cur_pistol_sprite(t_weapons *wpn, int width, int height, int cur_sprite, SDL_Surface *surface);
 void		load_weapons(t_weapons *wpn);
 void		load_pistol(t_weapons *wpn);
 int			load_pistol_sprite(t_weapons *wpn, int sprite_count);
 SDL_Surface		*load_pistol_part(int sprite);
-void			draw_pistol(t_weapons *wpn, t_player * pl);
+//void			draw_pistol(t_weapons *wpn, t_player * pl);
 
 void vline_walls(int x, t_player *pl, t_scaler ty, int n);
 t_scaler	scalar_create(int a, int b, int c, int d, int f);

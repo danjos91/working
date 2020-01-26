@@ -15,9 +15,7 @@
 char	*ft_strndup(const char *s1, size_t len)
 {
 	char	*copy;
-	size_t	l;
-
-	l = ft_strnlen(s1, len);
+	
 	if (!(copy = (char *)malloc(len + 1)))
 		return (NULL);
 	copy[len] = '\0';

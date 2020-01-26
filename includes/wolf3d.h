@@ -17,9 +17,11 @@
 # include "help.h"
 # include "engine.h"
 # include "events.h"
+# include "gun.h"
 //# include "door.h"
 # include "help.h"
 # include "player.h"
+# include "sky.h"
 # include "textures.h"
 
 

@@ -66,7 +66,8 @@ int				get_next_line(const int fd, char **line)
 	if ((r = gnl_read_line(file)) == -1)
 		return (-1);
 	temp = file->buff;
-	if ((endl = (ft_strchr(file->buff, '\n') > 0)))
+	endl = 0;
+	if ((endl == 0))// (ft_strchr(file->buff, '\n') > 0)))
 		*line = ft_strsub(file->buff, 0, ft_strchr(file->buff, '\n') \
 		- file->buff);
 	else

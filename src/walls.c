@@ -18,16 +18,20 @@ void load_imgs(SDL_Surface *img[10])
     img[4]= SDL_ConvertSurfaceFormat(img[4], SDL_PIXELFORMAT_ARGB8888, 0);
     img[5]= IMG_Load("Textures/graffiti.png");
     img[5]= SDL_ConvertSurfaceFormat(img[5], SDL_PIXELFORMAT_ARGB8888, 0);
-    img[6]= IMG_Load("Textures/wood.png");
-    img[7]= IMG_Load("Textures/wood.png");
-    img[8]= IMG_Load("Textures/wood.png");
+    img[6]= IMG_Load("Textures/green.png");
+    img[6]= SDL_ConvertSurfaceFormat(img[6], SDL_PIXELFORMAT_ARGB8888, 0);
+    img[7]= IMG_Load("Textures/red.png");
+    img[7]= SDL_ConvertSurfaceFormat(img[7], SDL_PIXELFORMAT_ARGB8888, 0);
+    img[8]= IMG_Load("Textures/met.png");
+    img[8]= SDL_ConvertSurfaceFormat(img[8], SDL_PIXELFORMAT_ARGB8888, 0);
     img[9]= IMG_Load("Textures/wood.png");
 }
 
 t_scaler	scalar_create(int a, int b, int c, int d, int f)
 {
     t_scaler	s;
-
+    //if (c - a == 0)
+      //  c += 1;
     s.result = d + (b - 1 - a) * (f - d) / (c - a);
     s.bop = ((f < d) ^ (c < a)) ? -1 : 1;
     s.fd = abs(f - d);
@@ -52,6 +56,7 @@ void vline_walls(int x, t_player *pl, t_scaler ty, int n)
     unsigned	txty;
     int			y;
     int         *pix;
+    int         color;
 
     y = pl->y1;
     pix = (int*)pl->srf->pixels;
@@ -62,10 +67,11 @@ void vline_walls(int x, t_player *pl, t_scaler ty, int n)
     {
         ++y;
         txty = scr_nxt(&ty);
-        *pix = color_transoform( ft_get_pixel(
+        color = color_transoform( ft_get_pixel(
                pl->img[n],
                pl->txtx % pl->img[n]->w,
                txty % pl->img[n]->h), pl->light);
+        *pix = color;
         pix += WIN_W ;
     }
 }

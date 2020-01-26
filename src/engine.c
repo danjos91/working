@@ -109,7 +109,9 @@ void	engine_begin(t_player *pl)
 {
 	int			neib;
 	int			s;
+	int         k;
 
+	k = 0;
 	engine_preset(pl);
     while(pl->cycle.head != pl->cycle.tail)
 	{
@@ -132,9 +134,21 @@ void	engine_begin(t_player *pl)
 				pl->ceil.nyceil  = pl->sectors[neib].ceil  - pl->where.z;
 				pl->floor.nyfloor = pl->sectors[neib].floor - pl->where.z;
 			}
+
 			if (engine_scale(pl, pl->cycle.current->sx1, pl->cycle.current->sx2) == 0)
 				continue; // Only render if it's visible
-			engine_put_lines(pl, neib);//Render all.
+            pl->f = 0;
+            if ( s < 1 && pl->sect->floor == 0)
+            {
+                pl->n = 0;
+            }
+            else if (s < 1 && pl->sect->floor == 6 && pl->sect->ceil == 10)
+                pl->n = 7;
+            else if (s >= 4 &&  s < 5 && pl->sect->floor == 0)
+                pl->n = 4;
+                else
+                pl->n = 2;
+            engine_put_lines(pl, neib);//Render all.
 		}
         ++pl->cycle.rend_sec[pl->cycle.current->sec_nb];
     }

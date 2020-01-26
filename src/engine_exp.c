@@ -80,8 +80,6 @@ int			engine_cross(t_player *pl, int sec_n, unsigned s)
 
 static void	engine_ceil_floor(t_player *pl, int x, int *z, int neib)
 {
-	unsigned	col;
-	col = 0;
 
 	*z = ((x - pl->x1) * (pl->t2.y - pl->t1.y) / (pl->x2 - pl->x1) + pl->t1.y) * 8;
 	//Acquire the Y coordinates for our ceiling & floor for this X coordinate. Clamp them.
@@ -108,8 +106,10 @@ static void	engine_ceil_floor(t_player *pl, int x, int *z, int neib)
         t.mapx = t.mapz * (WIN_W/2 - (float)t.x) / (WIN_W * (H_FOV));
         t.txtx1 = (unsigned int)(((t.mapz * pl->anglecos + t.mapx * pl->anglesin) + pl->where.x) * 256);
         t.txtz = (unsigned int)(((t.mapz * pl->anglesin - t.mapx * pl->anglecos) + pl->where.y) * 256);
-        if (t.y < pl->ceil.cya )//pl->s != 0)// && pl->s != 1)
-            pix1(&t, pl, CEIL);
+        if (t.y < pl->ceil.cya && pl->sect->ceil != 20)//pl->s != 0)// && pl->s != 1)
+            pix1(&t, pl, pl->f);
+        if (t.y < pl->ceil.cya && pl->sect->ceil == 20)
+            pix_sky(&t, pl, pl->f);
         if (t.y >= pl->ceil.cya)// && pl->s != 0 && pl->s != 1)
             pix1(&t, pl, FLOOR);
 
@@ -131,7 +131,11 @@ static void	engine_ceil_floor(t_player *pl, int x, int *z, int neib)
         pl->y1 = pl->ceil.cya;
         pl->y2 = pl->ceil.cnya;
         vline_walls(x, pl, scalar_create(a,b,c,d,f), WALL1);
-        if ( pl->cycle.rend_sec == 0)
+        t_tmp_trio	*check = malloc(sizeof(t_tmp_trio));
+        check->sec_nb = 18;
+        check->sx1 = 816;
+        check->sx2 = 871;
+        if (pl->cycle.head->sec_nb == 10);
             vline_graffiti(x, pl, scalar_create(a,b,c,d,f), GRAFFITI);
 		pl->y_top[x] = clamp(max(pl->ceil.cya, pl->ceil.cnya), pl->y_top[x], WIN_H-1);   // Shrink the remaining window below these ceilings
 		pl->y_bot[x] = clamp(min(pl->ceil.cyb, pl->ceil.cnyb), 0, pl->y_bot[x]); // Shrink the remaining window above these floors
@@ -176,7 +180,7 @@ void		engine_put_lines(t_player *pl, int neib)
 
 		if(neib < 0)
 		{
-            vline_walls(x, pl, scalar_create(a,b,c,d,f), WALL1);
+            vline_walls(x, pl, scalar_create(a,b,c,d,f), pl->n);
 		}
 	}
 	if(neib >= 0 && pl->endx >= pl->beginx && (pl->cycle.head + MAX_QUEUE + 1 - pl->cycle.tail) % MAX_QUEUE)

@@ -12,16 +12,16 @@
 
 NAME = wolf3d
 
-FLAGS = -Wall -Werror -Wextra -O -O0 -O1 -O2 -O3 -Os -g 
+FLAGS = -Wall -Werror -Wextra -lg #-O -O0 -O1 -O2 -O3 -Os -g 
 
 CC = gcc
 
-LIBRARIES = -lft -L$(LIBFT_DIRECTORY)\
-	-lSDL2 -lSDL2main -L/Users/${USER}/.brew/Cellar/sdl2/2.0.10/lib\
-	-lSDL2_ttf -L/Users/${USER}/.brew/Cellar/sdl2_ttf/2.0.15/lib\
-	-lSDL2_image -L/Users/${USER}/.brew/Cellar/sdl2_image/2.0.5/lib
+LIBRARIES = -lft -L$(LIBFT_DIRECTORY) -lSDL2 -L /usr/lib/x86_64-linux-gnu/ -lSDL2_image -L /usr/lib/x86_6-linux-gnu/ -lm -L /usr/lib/x86_64-linux-gnu/
+	#-lSDL2 -lSDL2main -L/Users/${USER}/.brew/Cellar/sdl2/2.0.10/lib\
+	#-lSDL2_ttf -L/Users/${USER}/.brew/Cellar/sdl2_ttf/2.0.15/lib\
+		#-lSDL2_image -L/Users/${USER}/.brew/Cellar/sdl2_image/2.0.5/lib
 
-INCLUDES = -I$(HEADERS_DIRECTORY) -I$(LIBFT_HEADERS)\
+INCLUDES =-I /usr/include/SDL2/ -I$(HEADERS_DIRECTORY) -I$(LIBFT_HEADERS)\
 	
 LIBFT = $(addprefix $(LIBFT_DIRECTORY),libft.a)
 

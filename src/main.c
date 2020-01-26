@@ -143,12 +143,12 @@ int main(int ac, char **ag)
     t_player pl;
     t_others ot;
     t_sector_ops op;
-	t_wolf3d w;
+//	t_wolf3d w;
 	t_weapons wpn;
-	SDL_Surface *scr_surf = NULL;
+///	SDL_Surface *scr_surf = NULL;
 
 	pl.sectors_nb = 0;
-    w.weapon_texture = SDL_LoadBMP("Textures/pistol.bmp");
+  //  w.weapon_texture = SDL_LoadBMP("Textures/pistol.bmp");
     if (ac < 2 || ac > 2)
     {
         printf("map error");
@@ -192,15 +192,17 @@ int main(int ac, char **ag)
             wpn.sprite_counter = 1;//if !1 is going to shoot
             load_pistol(&wpn);//load gun
             load_imgs(pl.img);
+            load_sky(&pl);
             while (!se.quit)
             {
                 pl.txtx = 0;
 
                 //SDL_BlitSurface(pl.img[3], ft_create_rect(WIN_W, WIN_H, 0, 0), pl.srf, ft_create_rect(0, 0, 0, 0));
                 //SDL_BlitSurface(w.weapon_texture, ft_create_rect(15, 15, 0, 0), pl.srf, ft_create_rect(WIN_W, WIN_H, WIN_W, WIN_H));
-				engine_begin(&pl);
+				//draw_sky(&pl);
+                engine_begin(&pl);
 				
-				scr_surf = SDL_GetWindowSurface(window);
+//				scr_surf = SDL_GetWindowSurface(window);
 
 				//SDL_BlitSurface(pl.img[4], ft_create_rect(15, 15, 0, 0), pl.srf, ft_create_rect(50, 50, WIN_H/2, WIN_W/2));
 				if (pl.count_sprite == 10)// this for the event shoot

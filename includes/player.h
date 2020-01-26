@@ -2,6 +2,7 @@
 #define PLAYER_H
 # include "wolf3d.h"
 
+
 typedef struct	s_player
 {
 	SDL_Surface	*srf;
@@ -48,6 +49,9 @@ typedef struct	s_player
 	int       y1;
 	int       y2;
 	int        s;
+	int         n;
+	int         f;
+	int         **sky_pix;
 
 }				t_player;
 
