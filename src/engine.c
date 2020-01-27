@@ -142,10 +142,12 @@ void	engine_begin(t_player *pl)
             {
                 pl->n = 0;
             }
-            else if (s < 1 && pl->sect->floor == 6 && pl->sect->ceil == 10)
+            else if (pl->sect->floor == 6 && pl->sect->ceil == 10)
                 pl->n = 7;
-            else if (s >= 4 &&  s < 5 && pl->sect->floor == 0)
-                pl->n = 4;
+           // else if (pl->sect->floor == pl->sect->ceil)
+            //	pl->n = 4;
+			else if (s == 4 && pl->sect->floor == 0)// && pl->sect->floor == 0)
+                pl->n = 5;
                 else
                 pl->n = 2;
             engine_put_lines(pl, neib);//Render all.

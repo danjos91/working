@@ -2,7 +2,7 @@
 
 vertex	0 0 20 21 40		# 0 1 2 3
 
-vertex	3 20 21				# 4 5
+vertex	2 20 21				# 4 5
 
 vertex	8 20 21				# 6 7
 
@@ -28,9 +28,6 @@ vertex  88 29 32    #34 35
 #change leve
 
 
-
-
-
 # Sectors (floor height, ceiling height, then vertex numbers in clockwise order)
 # -2 open door in this sector -3 lift up platform -4 next lvl
 # After the list of vertexes, comes the list of sector numbers on the "opposite" side of that wall; "x" = none.
@@ -39,9 +36,9 @@ vertex  88 29 32    #34 35
 #room 1
 sector	0 20		0 1 4 6 11 10 9 8	-1 -1 -1 1 -1 -1 3 -1				#0
 #door 1
-sector	2 19			4 5 7 6				0 -1 2 -1					#1
+sector	0 20		4 5 7 6				    0 -1 2 -1					#1
 #room 2
-sector	4 30		2 3 13 12 7 5  		-1 -1 -1 5 -1 1			#2
+sector	2 30		2 3 13 12 7 5  		-1 -1 -1 5 -1 1			#2
 
 
 #button 1

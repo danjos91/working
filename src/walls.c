@@ -30,8 +30,8 @@ void load_imgs(SDL_Surface *img[10])
 t_scaler	scalar_create(int a, int b, int c, int d, int f)
 {
     t_scaler	s;
-    //if (c - a == 0)
-      //  c += 1;
+    if (c - a == 0)
+        c += 1;
     s.result = d + (b - 1 - a) * (f - d) / (c - a);
     s.bop = ((f < d) ^ (c < a)) ? -1 : 1;
     s.fd = abs(f - d);
@@ -51,28 +51,49 @@ int			scr_nxt(t_scaler *i)
     return (i->result);
 }
 
-void vline_walls(int x, t_player *pl, t_scaler ty, int n)
+void draw_walls(int x, t_player *pl, int wall, int n)
 {
     unsigned	txty;
     int			y;
-    int         *pix;
+    int        *pix;
     int         color;
+    t_scaler    ty;
 
-    y = pl->y1;
-    pix = (int*)pl->srf->pixels;
-    pl->y1 = clamp(pl->y1, 0, WIN_H-1);
-    pl->y2 = clamp(pl->y2, 0, WIN_H-1);
-    pix += pl->y1 * WIN_W + x;
-    while (y <= pl->y2)
+    if(wall == 0)
     {
-        ++y;
-        txty = scr_nxt(&ty);
-        color = color_transoform( ft_get_pixel(
-               pl->img[n],
-               pl->txtx % pl->img[n]->w,
-               txty % pl->img[n]->h), pl->light);
-        *pix = color;
-        pix += WIN_W ;
+        pl->y1 = pl->ceil.cya;
+        pl->y2 = pl->ceil.cnya;
+    }
+    if(wall == 1)
+    {
+        pl->y1 = pl->ceil.cnyb;
+        pl->y2 = pl->ceil.cyb;
+    }
+    if(wall == 2)
+    {
+        pl->y1 = pl->ceil.cya;
+        pl->y2 = pl->ceil.cyb;
+    }
+    ty = scalar_create(pl->floor.ya, pl->y1, pl->floor.yb, 0, pl->srf->w - 1);
+    y = pl->y1;
+    pix = (int *)pl->srf->pixels;
+    pl->y1 = clamp(pl->y1, 0, WIN_H-1);//??
+    pl->y2 = clamp(pl->y2, 0, WIN_H-1);//??
+    if(pl->y2 >= pl->y1)
+    {
+        if(pl->y2 == pl->y1)
+            pix[pl->y1*WIN_W+x] = pl->sky_pix[pl->y1][x];
+        while (y < pl->y2)
+        {
+            ++y;
+            txty = scr_nxt(&ty);
+            color = color_transoform(ft_get_pixel(
+                    pl->img[n],
+                    pl->txtx % pl->img[n]->w,
+                    txty % pl->img[n]->h), pl->light);
+            pix[y * WIN_W + x] = color;
+
+        }
     }
 }
 

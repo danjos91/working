@@ -38,4 +38,4 @@ dlopen=''
 dlpreopen=''
 
 # Directory that this library needs to be installed in:
-libdir='/Users/nshelly/CLionProjects/doom_nukem/dddd/lib'
+libdir='/Users/nshelly/CLionProjects/untitled2/lib'

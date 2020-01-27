@@ -13,26 +13,31 @@
 # include <math.h>
 # include <string.h>
 # include <libft.h>
+# include <sys/stat.h>//???
 # include "constants.h"
 # include "help.h"
 # include "engine.h"
 # include "events.h"
 # include "gun.h"
-//# include "door.h"
-# include "help.h"
+# include "door.h"
+# include "texture.h"
 # include "player.h"
 # include "sky.h"
 # include "textures.h"
 
+/*			but_detect.c			*/
+int			but_detect(t_player *pl);//return sec_nb of button
 
+/*			but.c			*/
+void		but_total(t_player *pl);//create buttons array
+int			but_script(t_player *pl, int but_nb, t_sub_ev *se);//choose but task
 
-//static unsigned NumSectors = 0;
+/*			door_detect.c			*/
+int			door_detect(t_player *pl);//return sec_nb of door
 
-typedef struct	s_w
-{	
-	SDL_Surface	*weapon_texture;
-	int			color;
-}				t_wolf3d;
+/*			door.c			*/
+void		door_but_сlick(t_player *pl, t_sub_ev *se);//when you press E key or button
+void		door(t_player *pl, t_sub_ev *se);//cycle for open door
 
 
 /*			math_functions.c			*/
@@ -47,11 +52,12 @@ t_xy		Intersect(float x1, float y1, float x2, float y2,float x3, float y3, float
 void		UnloadData();
 void		MovePlayer(float dx, float dy, t_player *player);
 float		Yaw(float y, float z, t_player *player);
-double		to_degrees(double radians);
+double		to_deg(double radians);
 
 /*			main.c			*/
+int			main(int ac, char **ag);
+void		player_init(t_player *pl, t_xy *v, float *angle, int *n);
 void		vline(int x, int y1,int y2, int top,int middle,int bottom, SDL_Surface* surface);
-
 /*			engine.c			*/
 void		engine_begin(t_player *pl);
 int			engine_scale(t_player *pl, int sx1, int sx2);
@@ -60,17 +66,34 @@ int			engine_scale(t_player *pl, int sx1, int sx2);
 int			engine_cross(t_player *pl, int sec_n, unsigned s);
 void		engine_put_lines(t_player *pl, int neib);
 
-/*			functions_main.c			*/
-int			sub_events(t_subevents *se, t_player *player);
-int			events(t_subevents *se, t_player *player);
-void		mouse_movement(t_mouse *ms, t_player *player);
-void		vectors_vel_dir(t_player *player, t_subevents *se, t_others *ot);
-void		sectors_ops(t_sector_ops *op, t_player *player, t_others *ot, t_subevents *se);
-void		jumps(t_subevents *se, t_player *player, t_sector_ops *op, t_others *ot);
+/*			events_1.c			*/
+int			events(t_sub_ev *se, t_player *player);
+
+/*			events_2.c			*/
+void		events_mouse_move(t_mouse *ms, t_player *pl);
+void		events_vel(t_player *pl, t_sub_ev *se, t_others *ot);
+void		events_jumps(t_sub_ev *se, t_player *pl, t_sect_ops *op, t_others *ot);
+
+/*			load_file.c			*/
+t_player	*load_next(t_player *pl);
+void		load_file(char *ag, t_player *pl);
+
+/*			load_textures.c			*/
+t_texture	*load_textures(t_player *pl);
+void		texture_init(t_player *pl);
+SDL_Texture	*texture_new(t_player *pl);
+
+/*			motion.c			*/
+void		motion_chk(t_sect_ops *op, t_player *player, t_others *ot, t_sub_ev *se);
+void		motion_move_pl(float dx, float dy, t_player *pl);
+
+
+/*			texture_parser.c			*/
+t_texture	texture_parse(const char *fp, unsigned edit);
 
 /*			door.c			*/
-void		door_button(t_player *pl, t_subevents *se);
-void		door(t_player *pl, t_subevents *se);
+void		door_button(t_player *pl, t_sub_ev *se);
+void		door(t_player *pl, t_sub_ev *se);
 
 /*			vector_1.c			*/
 t_vector3	ft_vec3_create(t_vector3 *orig, t_vector3 *dest);
@@ -86,7 +109,11 @@ t_vector3	ft_vec3_opposite(t_vector3 this);
 t_vector3	ft_vec3_scalar_product(t_vector3 this, double k);
 t_vector3	ft_vec3_normalize(t_vector3 vtc);
 
+/*          vectors_2.c*/
+float	vec2_cos(t_vector3 vec1, t_vector3 vec2);
+
 /*			sdl_addons.c			*/
 SDL_Rect	*ft_create_rect(int w, int h, int x, int y);
+void		ft_sdl_error();
 
 #endif

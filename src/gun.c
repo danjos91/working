@@ -29,7 +29,7 @@ void		draw_cur_pistol_sprite(t_weapons *wpn, int width,
             x = (int)x_num;
             if (wpn->pistol_sprite[cur_sprite][y][x] != 0x000000)
                     pix[height * WIN_W + x_img] =
-                            color_transoform(wpn->pistol_sprite[cur_sprite][y][x], 0.7);
+                            color_transoform(wpn->pistol_sprite[cur_sprite][y][x], 1);
             x_img++;
         }
         y_num += 0.5;

@@ -6,7 +6,7 @@
 /*   By: tjuana <tjuana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/28 15:10:22 by tjuana            #+#    #+#             */
-/*   Updated: 2019/11/11 14:14:59 by tjuana           ###   ########.fr       */
+/*   Updated: 2020/01/26 19:55:47 by nshelly          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int				get_next_line(const int fd, char **line)
 		return (-1);
 	temp = file->buff;
 	endl = 0;
-	if ((endl == 0))// (ft_strchr(file->buff, '\n') > 0)))
+	if ((!endl))// (ft_strchr(file->buff, '\n') > 0)))
 		*line = ft_strsub(file->buff, 0, ft_strchr(file->buff, '\n') \
 		- file->buff);
 	else

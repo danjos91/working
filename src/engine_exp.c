@@ -42,31 +42,30 @@ int			engine_cross(t_player *pl, int sec_n, unsigned s)
 		return (0);//continue
 	//If it's partially behind the player, cut it against player's view
 	pl->u0 = 0;
-	pl->u1 = 1023;
+	pl->u1 = 3000;//if the number is higher, the number or images in walls is going to be more
 	if((pl->t1.y <= 0) || (pl->t2.y <= 0))
 	{
-		// Find an intersection between the wall and the approximate edges of player's view
 		i1 = Intersect(pl->t1.x, pl->t1.y, pl->t2.x, pl->t2.y, -pl->nearside, pl->nearz, -pl->farside, pl->farz);
 		i2 = Intersect(pl->t1.x, pl->t1.y, pl->t2.x, pl->t2.y, pl->nearside, pl->nearz, pl->farside, pl->farz);
-        pl->org1x = pl->t1.x;
-        pl->org1y = pl->t1.y;
-        pl->org2x = pl->t2.x;
-        pl->org2y = pl->t2.y;
+        pl->org1.x = pl->t1.x;
+        pl->org1.y = pl->t1.y;
+        pl->org2.x = pl->t2.x;
+        pl->org2.y = pl->t2.y;
 		(pl->t1.y < pl->nearz && i1.y > 0) ? pl->t1 = i1 : pl->t1;
 		(pl->t1.y < pl->nearz && i1.y < 0) ? pl->t1 = i2 : pl->t1;
 		(pl->t2.y < pl->nearz && i1.y > 0) ? pl->t2 = i1 : pl->t2;
 		(pl->t2.y < pl->nearz && i1.y < 0) ? pl->t2 = i2 : pl->t2;
         /*EXTRA CALCS FOR WALLS*/
         if (fabsf(pl->t2.x - pl->t1.x) > fabsf(pl->t2.y - pl->t1.y)) {
-            pl->u0 = (int) ((pl->t1.x - pl->org1x) * 1023 / (pl->org2x - pl->org1x));
-            pl->u1 = (int) ((pl->t2.x - pl->org1x) * 1023 / (pl->org2x - pl->org1x));
+            pl->u0 =  ((pl->t1.x - pl->org1.x) * 3000 / (pl->org2.x - pl->org1.x));
+            pl->u1 =  ((pl->t2.x - pl->org1.x) * 3000/ (pl->org2.x - pl->org1.x));
         } else {
-            pl->u0 = (int) ((pl->t1.y - pl->org1y) * 1023 /
-                        (pl->org2y - pl->org1y));
-            pl->u1 = (int) ((pl->t2.y - pl->org1y) * 1023 /
-                        (pl->org2y - pl->org1y));
+            pl->u0 =  ((pl->t1.y - pl->org1.y) * 3000/
+                        (pl->org2.y - pl->org1.y));
+            pl->u1 =  ((pl->t2.y - pl->org1.y) * 3000/
+                        (pl->org2.y - pl->org1.y));
+            printf("w %d\n", pl->srf->w);
         }
-        /*END EXTRA CALCAS FOR WALLS*/
 	}
 	return (1);
 }
@@ -78,76 +77,76 @@ int			engine_cross(t_player *pl, int sec_n, unsigned s)
 ** **************************************************************************
 */
 
+/*void    draw_ceil_floor(int x, t_player *pl)
+{
+    pl->t.y = pl->y_top[x];
+    pl->t.x = x;
+    while (++pl->t.y <= pl->y_bot[x])//HERE we draw ceil and floor
+    {
+    if (pl->t.y >= pl->ceil.cya && pl->t.y <= pl->ceil.cyb)
+    {
+    pl->t.y = pl->ceil.cyb;
+    continue;
+    }
+    pl->t.hei = pl->t.y < pl->ceil.cya ? pl->ceil.yceil : pl->floor.yfloor;
+    pl->t.mapz = pl->t.hei * WIN_H * V_FOV / ((WIN_H / 2 - (float)pl->t.y) - pl->yaw * WIN_H * V_FOV);
+    pl->t.mapx = pl->t.mapz * (WIN_W/2 - (float)pl->t.x) / (WIN_W * (H_FOV));
+    pl->t.txtx1 = (unsigned int)(((pl->t.mapz * pl->anglecos + pl->t.mapx * pl->anglesin) + pl->where.x) * 256);
+    pl->t.txtz = (unsigned int)(((pl->t.mapz * pl->anglesin - pl->t.mapx * pl->anglecos) + pl->where.y) * 256);
+    if (pl->t.y < pl->ceil.cya && pl->sect->ceil != 20)//pl->s != 0)// && pl->s != 1)
+    pix1(&pl->t, pl, pl->f);
+    if (pl->t.y < pl->ceil.cya && pl->sect->ceil == 20)
+    pix_sky(&pl->t, pl, pl->f);
+    if (pl->t.y >= pl->ceil.cya)// && pl->s != 0 && pl->s != 1)
+    pix1(&pl->t, pl, FLOOR);
+    }
+}*/
+
 static void	engine_ceil_floor(t_player *pl, int x, int *z, int neib)
 {
-
-	*z = ((x - pl->x1) * (pl->t2.y - pl->t1.y) / (pl->x2 - pl->x1) + pl->t1.y) * 8;
-	//Acquire the Y coordinates for our ceiling & floor for this X coordinate. Clamp them.
+    pl->txtx = (int)((pl->u0 * ((pl->x2 - x) * pl->t2.y) + pl->u1 * ((x - pl->x1) * pl->t1.y)) / ((pl->x2 - x) * pl->t2.y + (x - pl->x1) * pl->t1.y));
 	pl->floor.ya = (x - pl->x1) * (pl->ceil.y2a - pl->ceil.y1a) / (pl->x2 - pl->x1) + pl->ceil.y1a;
 	pl->ceil.cya = clamp(pl->floor.ya, pl->y_top[x], pl->y_bot[x]);// top
 	pl->floor.yb = (x - pl->x1) * (pl->floor.y2b - pl->floor.y1b) / (pl->x2 - pl->x1) + pl->floor.y1b;
 	pl->ceil.cyb = clamp(pl->floor.yb, pl->y_top[x], pl->y_bot[x]);// bottom
-    /*  NEW CODOE FOR TEXTURES CEIL AND FLOOR*/
 
-    t_textures t;
+    //draw_ceil_floor(x, pl);
+	pl->t.y = pl->y_top[x];
+	pl->t.x = x;
+	while (++pl->t.y <= pl->y_bot[x])//HERE we draw ceil and floor
+	{
+		if (pl->t.y >= pl->ceil.cya && pl->t.y <= pl->ceil.cyb)
+		{
+			pl->t.y = pl->ceil.cyb;
+			continue;
+		}
+		pl->t.hei = pl->t.y < pl->ceil.cya ? pl->ceil.yceil : pl->floor.yfloor;
+		pl->t.mapz = pl->t.hei * WIN_H * V_FOV / ((WIN_H / 2 - (float)pl->t.y) - pl->yaw * WIN_H * V_FOV);
+		pl->t.mapx = pl->t.mapz * (WIN_W/2 - (float)pl->t.x) / (WIN_W * (H_FOV));
+		pl->t.txtx1 = (unsigned int)(((pl->t.mapz * pl->anglecos + pl->t.mapx * pl->anglesin) + pl->where.x) * 256);
+		pl->t.txtz = (unsigned int)(((pl->t.mapz * pl->anglesin - pl->t.mapx * pl->anglecos) + pl->where.y) * 256);
+		if (pl->t.y < pl->ceil.cya && pl->sect->ceil != 20)//pl->s != 0)// && pl->s != 1)
+			pix1(&pl->t, pl, pl->f);
+		if (pl->t.y < pl->ceil.cya && pl->sect->ceil == 20)
+			pix_sky(&pl->t, pl, pl->f);
+		if (pl->t.y >= pl->ceil.cya)// && pl->s != 0 && pl->s != 1)
+			pix1(&pl->t, pl, FLOOR);
+	}
 
-    t.y = pl->y_top[x];
-    t.x = x;
-    while (++t.y <= pl->y_bot[x])//HERE we draw ceil and floor
-    {
-        if (t.y >= pl->ceil.cya && t.y <= pl->ceil.cyb)
-        {
-            t.y = pl->ceil.cyb;
-            continue;
-        }
-        t.hei = t.y < pl->ceil.cya ? pl->ceil.yceil : pl->floor.yfloor;
-        t.mapz = t.hei * WIN_H * V_FOV / ((WIN_H / 2 - (float)t.y) - pl->yaw * WIN_H * V_FOV);
-        //printf("%f\n", player->yaw);
-        t.mapx = t.mapz * (WIN_W/2 - (float)t.x) / (WIN_W * (H_FOV));
-        t.txtx1 = (unsigned int)(((t.mapz * pl->anglecos + t.mapx * pl->anglesin) + pl->where.x) * 256);
-        t.txtz = (unsigned int)(((t.mapz * pl->anglesin - t.mapx * pl->anglecos) + pl->where.y) * 256);
-        if (t.y < pl->ceil.cya && pl->sect->ceil != 20)//pl->s != 0)// && pl->s != 1)
-            pix1(&t, pl, pl->f);
-        if (t.y < pl->ceil.cya && pl->sect->ceil == 20)
-            pix_sky(&t, pl, pl->f);
-        if (t.y >= pl->ceil.cya)// && pl->s != 0 && pl->s != 1)
-            pix1(&t, pl, FLOOR);
 
-    }
-    /* END OF CODE FOR TEXTURES CEIL AND FLOOR*/
 	if(neib >= 0)
 	{
 		pl->floor.nya = (x - pl->x1) * (pl->ceil.ny2a - pl->ceil.ny1a) / (pl->x2 - pl->x1) + pl->ceil.ny1a;
 		pl->ceil.cnya = clamp(pl->floor.nya, pl->y_top[x], pl->y_bot[x]);
 		pl->floor.nyb = (x - pl->x1) * (pl->floor.ny2b - pl->floor.ny1b) / (pl->x2 - pl->x1) + pl->floor.ny1b;
 		pl->ceil.cnyb = clamp(pl->floor.nyb, pl->y_top[x], pl->y_bot[x]);
-		//If our ceiling is higher than their ceiling, render upper wall
-        int a,b,c,d,f;
-        a = pl->floor.ya;
-        b = pl->ceil.cya;
-        c = pl->floor.yb;
-        d = 0;
-        f = pl->srf->w - 1;
-        pl->y1 = pl->ceil.cya;
-        pl->y2 = pl->ceil.cnya;
-        vline_walls(x, pl, scalar_create(a,b,c,d,f), WALL1);
-        t_tmp_trio	*check = malloc(sizeof(t_tmp_trio));
-        check->sec_nb = 18;
-        check->sx1 = 816;
-        check->sx2 = 871;
-        if (pl->cycle.head->sec_nb == 10);
-            vline_graffiti(x, pl, scalar_create(a,b,c,d,f), GRAFFITI);
 		pl->y_top[x] = clamp(max(pl->ceil.cya, pl->ceil.cnya), pl->y_top[x], WIN_H-1);   // Shrink the remaining window below these ceilings
 		pl->y_bot[x] = clamp(min(pl->ceil.cyb, pl->ceil.cnyb), 0, pl->y_bot[x]); // Shrink the remaining window above these floors
-        a = pl->floor.ya;
-        b = pl->ceil.cnyb + 1;
-        c = pl->floor.yb;
-        d = 0;
-        f = pl->srf->w - 1;
-        pl->y1 = pl->ceil.cnyb + 1;
-        pl->y2 = pl->ceil.cyb;
-        vline_walls(x, pl, scalar_create(a,b,c,d,f), WALL1);
+        draw_walls(x, pl, WALL_TOP, pl->n);
+        draw_walls(x, pl, WALL_BOTT, pl->n);
     }
+	else
+        draw_walls(x, pl, WALL_FULL, pl->n);
 }
 /*
 ** **************************************************************************
@@ -166,23 +165,7 @@ void		engine_put_lines(t_player *pl, int neib)
 	x = pl->beginx;
 
 	while (++x <= pl->endx)
-	{
-        pl->txtx = (int)((pl->u0 * ((pl->x2 - x) * pl->t2.y) + pl->u1 * ((x - pl->x1) * pl->t1.y)) / ((pl->x2 - x) * pl->t2.y + (x - pl->x1) * pl->t1.y));
 		engine_ceil_floor(pl, x, &z, neib);//ceil floor and some walls
-        int a,b,c,d,f;
-        a = pl->floor.ya ;
-        b = pl->ceil.cya;
-        c = pl->floor.yb ;
-        d = 0;
-        f = pl->srf->w - 1;
-        pl->y1 = pl->ceil.cya;
-        pl->y2 = pl->ceil.cyb;
-
-		if(neib < 0)
-		{
-            vline_walls(x, pl, scalar_create(a,b,c,d,f), pl->n);
-		}
-	}
 	if(neib >= 0 && pl->endx >= pl->beginx && (pl->cycle.head + MAX_QUEUE + 1 - pl->cycle.tail) % MAX_QUEUE)
 	{
 		pl->cycle.head->sec_nb = neib;

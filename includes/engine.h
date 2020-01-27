@@ -20,7 +20,7 @@ typedef struct	s_sector//have to be static
     int			npoints;// How many vertexes there are
 }				t_sector;//*sectors = NULL;
 
-typedef struct s_sector_ops
+typedef struct s_sect_ops
 {
     float			px;
     float			dx;
@@ -28,12 +28,13 @@ typedef struct s_sector_ops
     float			dy;
     const t_sector	*sect;
     const t_xy		*vert;
-    float			eyeheight;
+    float			eyeheight;//need erase
+    float           eye_h;
     float			hole_low;
     float			hole_high;
     float			xd;
     float			yd;
-}					t_sector_ops;
+}					t_sect_ops;
 
 typedef struct	s_others
 {

@@ -13,8 +13,9 @@ typedef	struct			s_weapons
     int					pistol_sprite[6][128][128];
     int					type;
     double				sprite_counter;
+    int                 w;
+    int                 h;
 }						t_weapons;
-
 
 void		draw_cur_pistol_sprite(t_weapons *wpn, int width, int height, int cur_sprite, SDL_Surface *surface);
 void		load_weapons(t_weapons *wpn);

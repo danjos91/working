@@ -8,7 +8,7 @@ int			ft_get_pixel(SDL_Surface *sur, int x, int y)//no da el pixel que vamos a u
 {
     int		*pixel;
 
-    pixel = sur->pixels + y * sur->pitch + x * sur->format->BytesPerPixel;
+    pixel = sur->pixels + y * (sur->pitch ) + x * sur->format->BytesPerPixel;
     return (*pixel);
 }
 
@@ -31,5 +31,5 @@ void		pix1(t_textures *t, t_player *pl, int n)//guarda la textura gun
     int *pix;
 
     pix = (int *)pl->srf->pixels;
-        pix[t->y * WIN_W + t->x] = color_transoform(ft_get_pixel(pl->img[n], t->txtx1 % pl->img[n]->w, t->txtz % pl->img[n]->h), pl->light);
+        pix[t->y * WIN_W + t->x ] = color_transoform(ft_get_pixel(pl->img[n], t->txtx1 % pl->img[n]->w, t->txtz % pl->img[n]->h), pl->light);
 }

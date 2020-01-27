@@ -1,12 +1,18 @@
 #ifndef PLAYER_H
 #define PLAYER_H
+
 # include "wolf3d.h"
+# include "door.h"
+# include "gun.h"
+# include "textures.h"
 
 
 typedef struct	s_player
 {
 	SDL_Surface	*srf;
+    SDL_Window	*win;
 	SDL_Surface *img[10];
+	char        *lvl;
 	t_xy		t1;
 	t_xy		t2;
 	t_xy		scale_1;
@@ -24,6 +30,10 @@ typedef struct	s_player
 	t_sector	*sect;//current sector
 	int			door_all;//how much doors
 	int			door_nb;//door near with player
+	t_door      *doors;
+	int         but_all;
+	int         but_nb;
+	t_but       *buttons;
 	int			neib;
 	t_ceil		ceil;
 	t_floor		floor;
@@ -37,21 +47,21 @@ typedef struct	s_player
 	int			y_bot[WIN_W];
 	int			beginx;
 	int			endx;
+	int         contin;
 	int         count_sprite;//for start animation
     int         txtx;//need for walls
-	int         u0;// "
-	int         u1;// "
-	float       org1x;
-	float       org1y;
-	float       org2x;
-	float       org2y;
+	float         u0;// "
+	float         u1;
+	t_xy 		org1;
+	t_xy 		org2;
 	float       light;
-	int       y1;
-	int       y2;
-	int        s;
+	int         y1;
+	int         y2;
+	int         s;
 	int         n;
 	int         f;
 	int         **sky_pix;
+	t_textures	t;
 
 }				t_player;
 
