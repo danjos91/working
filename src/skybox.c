@@ -29,45 +29,16 @@ int			load_sky(t_player * pl)
     return (1);
 }
 
-void		draw_sky(t_player *pl)
-{
-
-    int		x_img;
-    int     *pix;
-    t_xy_int    pos;
-    t_xy    num;
-    t_xy_int   start;
-    start.y = 0;
-    start.x = 0;
-
-    pix = (int*)pl->srf->pixels;
-    num.y = 0;
-    pos.y = 0;
-    (void)((pos.y *= 0 | (int)(num.y *= 0)));
-    while (pos.y < pl->img[3]->h && start.y < WIN_H)
-    {
-        pos.x = 0;
-        num.x = 0;
-        x_img = start.x ;
-        while (pos.x < pl->img[3]->w - 1 && x_img < WIN_W)
-        {
-            num.x += 1.0f;//width of the gun and hand
-            pos.x = (int)num.x;
-            if (pl->sky_pix[(pos.y)][pos.x] != 0x000000)
-                pix[start.y* WIN_W + x_img] =
-                        color_transoform(pl->sky_pix[pos.y][pos.x], 1);
-            x_img++;
-        }
-        num.y += 1.0f;
-        pos.y = (int)num.y;
-        start.y++;
-    }
-}
-
-void		pix_sky(t_textures *t, t_player *pl, int n)//guarda la textura gun
+void		pix_sky(t_textures *t, t_player *pl)//guarda la textura gun
 {
     int *pix;
+    int hex;
+    unsigned int p;
+    int n;
 
+	n = 5;
     pix = (int *)pl->srf->pixels;
-    pix[t->y * WIN_W + t->x] = pl->sky_pix[t->y][t->x];
+	p = (t->y%pl->tex[n].h) * pl->tex[n].w + t->x%pl->tex[n].w ;//formula = y*w + x
+	hex = hexcolor(pl->tex[n].pixels[p].r, pl->tex[n].pixels[p].g, pl->tex[n].pixels[p].b);
+    pix[t->y * WIN_W + t->x] = hex;//pl->sky_pix[t->y][t->x];
 }

@@ -5,8 +5,7 @@
 
 
 
-void		draw_cur_pistol_sprite(t_weapons *wpn, int width,
-                                   int height, int cur_sprite, SDL_Surface *surface)
+void		draw_cur_pistol_sprite(t_gun *wpn, int width, int height, int cur_sprite, SDL_Surface *surface)
 {
     int		x;
     int		y;
@@ -38,91 +37,54 @@ void		draw_cur_pistol_sprite(t_weapons *wpn, int width,
     }
 }
 
-void		load_weapons(t_weapons *wpn)
+static void		draw_gun(t_player *pl, int width, int height, SDL_Surface *surface, int n)
 {
-    wpn->sprite_counter = 1;
-    load_pistol(wpn);
+	unsigned int		x;
+	unsigned int		y;
+	int		x_img;
+	float	x_num;
+	float	y_num;
+	int *pix = (int*)surface->pixels;
+	unsigned int p;
+	int hex;
+
+	y_num = 0;
+	y = 0;
+	(void)((y *= 0 | (int)(y_num *= 0)));
+	while (y < pl->tex[n].h && height < WIN_H)
+	{
+		x = 0;
+		x_num = 0;
+		x_img = width - 200;
+		while (x < pl->tex[n].w - 1 && x_img < WIN_W)
+		{
+			x_num += 0.8;//width of the gun and hand
+			x = (int)x_num;
+			p = (y%pl->tex[n].h) * pl->tex[n].w + x % pl->tex[n].w ;//formula = y*w + x
+			hex = hexcolor(pl->tex[n].pixels[p].r, pl->tex[n].pixels[p].g, pl->tex[n].pixels[p].b);
+			if (pl->tex[n].pixels[p].a != 0)
+				pix[height * WIN_W + x_img] =
+						color_transoform(hex, pl->light);
+			x_img++;
+		}
+		y_num += 1;
+		y = (int)y_num;
+		height++;
+	}
 }
 
-void		load_pistol(t_weapons *wpn)
+void			draw_pistol(t_gun *wpn, t_player *pl)
 {
-    int sprite;
-    int max_sprites;
-
-    max_sprites = 6;//number of images
-    sprite = 0;
-    while  (sprite < max_sprites)
-    {
-        load_pistol_sprite(wpn, sprite);
-        sprite++;
-    }
-}
-
-int			load_pistol_sprite(t_weapons *wpn, int sprite_count)
-{
-    SDL_Surface		*cur_sprite;
-    unsigned int	*pixels;
-    int				x;
-    int				y;
-
-    if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG))
-        ft_putendl(IMG_GetError());
-    cur_sprite = load_pistol_part(sprite_count);
-    y = -1;
-    pixels = (unsigned int *)cur_sprite->pixels;
-    while (++y < 128)
-    {
-        x = -1;
-        while (++x < 128)
-            wpn->pistol_sprite[sprite_count][y][x] = pixels[(y * cur_sprite->w) + x];
-    }
-    SDL_FreeSurface(cur_sprite);
-    return (1);
-}
-
-SDL_Surface		*load_pistol_part(int sprite)
-{
-    SDL_Surface *cur_sprite;
-    SDL_Surface *tmp;
-     cur_sprite = NULL;
-
-    if (sprite == 0) {
-        cur_sprite = IMG_Load("sprites/pistol1.png");
-        cur_sprite= SDL_ConvertSurfaceFormat(cur_sprite, SDL_PIXELFORMAT_ARGB8888, 0);
-    }
-    else if (sprite == 1)
-        cur_sprite = IMG_Load("sprites/pistol2.png");
-    else if (sprite == 2)
-        cur_sprite = IMG_Load("sprites/pistol3.png");
-    else if (sprite == 3)
-        cur_sprite = IMG_Load("sprites/pistol4.png");
-    else if (sprite == 4)
-        cur_sprite = IMG_Load("sprites/pistol5.png");
-    else if (sprite == 5)
-        cur_sprite = IMG_Load("sprites/pistol6.png");
-    tmp = SDL_ConvertSurfaceFormat(cur_sprite,
-                                   SDL_PIXELFORMAT_ARGB8888, 0);//SDL_PIXELFORMAT_ARGB32, 0);
-    SDL_FreeSurface(cur_sprite);
-    cur_sprite = tmp;
-    return (cur_sprite);
-}
-
-void			draw_pistol(t_weapons *wpn, t_player *pl)
-{
-    static float velocity;//how fast are we going to see the animation of the gun
+	int n;
+	n = 9;
     if (wpn->sprite_counter == 1)
-        draw_cur_pistol_sprite(wpn, WIN_W - 400, WIN_H - 250, 0, pl->srf);
+		draw_gun(pl,WIN_W - 400, WIN_H - 310, pl->srf, n);
     else if (wpn->sprite_counter > 1)
     {
-        if(velocity < 3)
-        {
-            draw_cur_pistol_sprite(wpn, WIN_W - 400, WIN_H - 250, wpn->sprite_counter - 1, pl->srf);
-            velocity += 0.05f;
-        } else
-            velocity = 0;
+            draw_gun(pl,WIN_W - 430 ,WIN_H - 340, pl->srf, n + 1);
         wpn->sprite_counter += 1;
     }
-    if (wpn->sprite_counter >= 6)
+    if (wpn->sprite_counter > 3)
         wpn->sprite_counter = 1;
 }
 

@@ -5,7 +5,6 @@
 
 void player_init(t_player *pl, t_xy *v, float *angle, int *n)//init data for LoadData function
 {
-    //player = (struct player) { {v->x, v->y, 0}, {0,0,0}, *angle,0,0,0, n };
     pl->where.x = v->x;
     pl->where.y = v->y;
     pl->where.z = 0;
@@ -21,7 +20,7 @@ void player_init(t_player *pl, t_xy *v, float *angle, int *n)//init data for Loa
 	pl->floor.nyfloor = 0;
 	//If it's partially behind the player, clip it against player's view frustrum
 	pl->nearz = 1e-4f;
-	pl->farz = -5;
+	pl->farz = 5;
 	pl->nearside = 1e-5f;
 	pl->farside = 20.f;
 	pl->door_all = -1;
@@ -53,7 +52,7 @@ int main(int ac, char **ag)
     t_player pl;
     t_others ot;
     t_sect_ops op;
-    t_weapons wpn;
+    t_gun wpn;
 
     pl.sectors_nb = 0;
     if (ac < 2 || ac > 2)
@@ -91,9 +90,10 @@ int main(int ac, char **ag)
             se.ducking = 0;
             ms.yaw = 0;
             wpn.sprite_counter = 1;//if !1 is going to shoot
-            load_pistol(&wpn);//load gun
+            //load_pistol(&wpn);//load gun
             load_imgs(pl.img);
             load_sky(&pl);
+			pl.tex = load_textures(&pl);
             while (!se.quit)
             {
                 pl.txtx = 0;
@@ -120,6 +120,10 @@ int main(int ac, char **ag)
                 if (!events(&se, &pl))
                     return(0);
                 door(&pl, &se);
+                int k = 0;
+                k++;
+                if (k == 50)
+                	exit(1);
             }
 
             UnloadData(&pl);

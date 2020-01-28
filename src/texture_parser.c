@@ -76,6 +76,7 @@ t_texture		texture_parse_2(size_t f_size, int fd, unsigned char *head)
 		exit(EXIT_FAILURE);
 	}
 	res.pixels = texture_parse_3(pix_raw, i, head[BPP]);
+
 	return (res);
 }
 
@@ -118,7 +119,7 @@ static void		texture_header_chk(const char *fp, int fd, unsigned char *head)
 ** **************************************************************************
 */
 
-t_texture		texture_parse(const char *fp, unsigned edit)
+t_texture		texture_parse(const char *fp)
 {
 	t_texture		res;
 	struct stat		st_inf;
@@ -135,6 +136,7 @@ t_texture		texture_parse(const char *fp, unsigned edit)
 	texture_header_chk(fp, fd, head);
 	stat(fp, &st_inf);
 	res = texture_parse_2(st_inf.st_size, fd, head);
-	res.edit = edit;
+	res.w = ((short *)head)[IMG_W];
+	res.h = ((short *)head)[IMG_H];
 	return (res);
 }

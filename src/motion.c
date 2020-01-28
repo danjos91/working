@@ -12,6 +12,23 @@
 
 #include "wolf3d.h"
 
+static void motion_dir(t_player *pl)
+{
+	pl->anglesin = sinf(pl->angle);
+	pl->anglecos = cosf(pl->angle);
+	/*if (pl->anglecos > 0 &&  pl->anglesin < 0)
+		pl->nearz = 5;
+	else if	(pl->anglecos > 0 && pl->anglesin > 0)
+		pl->nearz =  5;
+	else if (pl->anglecos < 0 &&  pl->anglesin < 0)
+		pl->nearz = -5;
+	else if	(pl->anglecos < 0 && pl->anglesin > 0)
+		pl->nearz =  -5;*/
+
+
+	//printf("sin = %f cos = %f\n", to_deg(pl->anglesin), to_deg(pl->anglecos));
+}
+
 /*
 ** **************************************************************************
 **	void motion_move_pl(float dx, float dy, t_player *pl)
@@ -49,8 +66,7 @@ void		motion_move_pl(float dx, float dy, t_player *pl)
 		}
 	pl->where.x += dx;
 	pl->where.y += dy;
-	pl->anglesin = sinf(pl->angle);
-	pl->anglecos = cosf(pl->angle);
+	motion_dir(pl);
 }
 
 /*
@@ -110,7 +126,9 @@ void		motion_chk(t_sect_ops *op, t_player *pl, t_others *ot, t_sub_ev *se)
 		op->vert[i].x, op->vert[i].y, op->vert[i + 1].x, op->vert[i + 1].y) \
 		&& PointSide(op->px + op->dx, op->py + op->dy, op->vert[i].x, \
 		op->vert[i].y, op->vert[i + 1].x, op->vert[i + 1].y) < 0)
+		{    //printf(".\n");
 			ot->moving = motion_chk_2(op, pl, i);
+		}
 	}
 	motion_move_pl(op->dx, op->dy, pl);
 	se->falling = 1;
