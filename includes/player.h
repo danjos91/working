@@ -2,10 +2,19 @@
 #define PLAYER_H
 
 # include "wolf3d.h"
-# include "door.h"
-# include "gun.h"
-# include "textures.h"
+#include "texture.h"
 
+
+typedef struct s_textures
+{
+	float hei;
+	float mapx;
+	float mapz;
+	unsigned txtx1;
+	unsigned txtz;
+	int x;
+	int y;
+}               t_textures;
 
 typedef struct	s_player
 {
@@ -32,9 +41,7 @@ typedef struct	s_player
 	int			door_nb;//door near with player
 	t_door      *doors;
 	int         but_all;
-	int         but_nb;
 	t_but       *buttons;
-	int			neib;
 	t_ceil		ceil;
 	t_floor		floor;
 	float		nearz;
@@ -47,7 +54,6 @@ typedef struct	s_player
 	int			y_bot[WIN_W];
 	int			beginx;
 	int			endx;
-	int         contin;
 	int         count_sprite;//for start animation
     int         txtx;//need for walls
 	float         u0;// "
@@ -62,6 +68,9 @@ typedef struct	s_player
 	int         f;
 	int         **sky_pix;
 	t_textures	t;
+	t_texture   *tex;
+	int			textures_nb;
+
 
 }				t_player;
 

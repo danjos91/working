@@ -1,6 +1,8 @@
 #ifndef ENGINE_H
 #define ENGINE_H
-# include "wolf3d.h"
+
+#include "wolf3d.h"
+#include "help.h"
 
 typedef struct	s_cycle//item
 {

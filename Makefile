@@ -6,23 +6,23 @@
 #    By: drafe <drafe@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/08/08 11:40:58 by tjuana            #+#    #+#              #
-#    Updated: 2020/01/21 18:32:50 by nshelly          ###   ########.fr        #
+#    Updated: 2020/01/28 11:32:14 by nshelly          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = wolf3d
+NAME = doom-nukem
 
-FLAGS = -Wall -Werror -Wextra -lg #-O -O0 -O1 -O2 -O3 -Os -g 
+FLAGS = -Wall -Werror -Wextra -O -O0 -O1 -O2 -O3 -Os -g
 
 CC = gcc
 
-LIBRARIES = -lft -L$(LIBFT_DIRECTORY) -lSDL2 -L /usr/lib/x86_64-linux-gnu/ -lSDL2_image -L /usr/lib/x86_6-linux-gnu/ -lm -L /usr/lib/x86_64-linux-gnu/
-	#-lSDL2 -lSDL2main -L/Users/${USER}/.brew/Cellar/sdl2/2.0.10/lib\
-	#-lSDL2_ttf -L/Users/${USER}/.brew/Cellar/sdl2_ttf/2.0.15/lib\
-		#-lSDL2_image -L/Users/${USER}/.brew/Cellar/sdl2_image/2.0.5/lib
+LIBRARIES = -lft -L$(LIBFT_DIRECTORY)\
+	-lSDL2 -lSDL2main -L/Users/${USER}/.brew/Cellar/sdl2/2.0.10/lib\
+	-lSDL2_ttf -L/Users/${USER}/.brew/Cellar/sdl2_ttf/2.0.15/lib\
+	-lSDL2_image -L/Users/${USER}/.brew/Cellar/sdl2_image/2.0.5/lib
 
-INCLUDES =-I /usr/include/SDL2/ -I$(HEADERS_DIRECTORY) -I$(LIBFT_HEADERS)\
-	
+INCLUDES = -I$(HEADERS_DIRECTORY) -I$(LIBFT_HEADERS)\
+
 LIBFT = $(addprefix $(LIBFT_DIRECTORY),libft.a)
 
 LIBFT_DIRECTORY = ./libft/
@@ -33,30 +33,42 @@ HEADERS_DIRECTORY = ./includes/
 
 HEADERS_LIST = wolf3d.h\
 	constants.h\
+	door.h\
 	engine.h\
 	events.h\
 	gun.h\
 	help.h\
 	player.h\
+	sky.h\
+	texture.h\
 	textures.h\
-	wolf3d.h
 
-HEADERS = $(addprefix $(HEADERS_DIRECTORY), $(HEADERS_LIST))
+		HEADERS = $(addprefix $(HEADERS_DIRECTORY), $(HEADERS_LIST))
 
 DIRECTORY = $(shell pwd)
 
 SRCS_DIRECTORY = ./src/
 
-SRCS_LIST = engine.c\
-            engine_exp.c\
-            functions_main.c\
-            gun.c\
-            main.c\
+SRCS_LIST = main.c\
+			but.c\
+			but_detect.c\
+			door.c\
+			door_detect.c\
+			engine.c\
+			engine_exp.c\
+			events_1.c\
+			events_2.c\
+			gun.c\
+            load_file.c\
 			math_functions.c\
+			motion.c\
 			sdl_addons.c\
+			skybox.c\
+			texture_parser.c\
 			textures.c\
 			vectors_1.c\
 			vectors_2.c\
+			vectors_3.c\
 			walls.c
 
 OBJS_DIRECTORY = objects/
@@ -79,7 +91,7 @@ $(NAME): $(LIBFT) $(OBJS_DIRECTORY) $(OBJS)
 	$(CC) $(FLAGS) $(LIBRARIES) $(INCLUDES) $(OBJS) -o $(NAME)
 	@echo "\n$(NAME): $(GREEN)object files were created$(RESET)"
 	@echo "$(NAME): $(GREEN)$(NAME) was created$(RESET)"
-	
+
 $(OBJS_DIRECTORY):
 	@mkdir -p $(OBJS_DIRECTORY)
 	@echo "$(NAME): $(GREEN)$(OBJS_DIRECTORY) was created$(RESET)"

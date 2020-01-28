@@ -64,7 +64,7 @@ void		draw_sky(t_player *pl)
     }
 }
 
-void		pix_sky(t_textures *t, t_player *pl, int n)//guarda la textura gun
+void		pix_sky(t_textures *t, t_player *pl)//guarda la textura gun
 {
     int *pix;
 

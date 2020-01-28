@@ -109,9 +109,7 @@ void	engine_begin(t_player *pl)
 {
 	int			neib;
 	int			s;
-	int         k;
 
-	k = 0;
 	engine_preset(pl);
     while(pl->cycle.head != pl->cycle.tail)
 	{
@@ -120,9 +118,8 @@ void	engine_begin(t_player *pl)
 		while (++s < pl->sect->npoints)
 		{
 		    pl->s = s;
-			if (engine_cross(pl, pl->cycle.current->sec_nb, s) == 0)
+			if (engine_cross(pl) == 0)
 				continue;
-//			if (pl->cycle.current->sec_nb == 0)
 
 			//Acquire the floor and ceiling heights, relative to where the player's view is
 			pl->ceil.yceil = pl->sect->ceil - pl->where.z;
@@ -144,8 +141,6 @@ void	engine_begin(t_player *pl)
             }
             else if (pl->sect->floor == 6 && pl->sect->ceil == 10)
                 pl->n = 7;
-           // else if (pl->sect->floor == pl->sect->ceil)
-            //	pl->n = 4;
 			else if (s == 4 && pl->sect->floor == 0)// && pl->sect->floor == 0)
                 pl->n = 5;
                 else

@@ -5,8 +5,7 @@
 
 
 
-void		draw_cur_pistol_sprite(t_weapons *wpn, int width,
-                                   int height, int cur_sprite, SDL_Surface *surface)
+void		draw_cur_pistol_sprite(t_gun *wpn, int width, int height, int cur_sprite, SDL_Surface *surface)
 {
     int		x;
     int		y;
@@ -38,13 +37,7 @@ void		draw_cur_pistol_sprite(t_weapons *wpn, int width,
     }
 }
 
-void		load_weapons(t_weapons *wpn)
-{
-    wpn->sprite_counter = 1;
-    load_pistol(wpn);
-}
-
-void		load_pistol(t_weapons *wpn)
+void		load_pistol(t_gun *wpn)
 {
     int sprite;
     int max_sprites;
@@ -58,7 +51,7 @@ void		load_pistol(t_weapons *wpn)
     }
 }
 
-int			load_pistol_sprite(t_weapons *wpn, int sprite_count)
+int			load_pistol_sprite(t_gun *wpn, int sprite_count)
 {
     SDL_Surface		*cur_sprite;
     unsigned int	*pixels;
@@ -107,7 +100,7 @@ SDL_Surface		*load_pistol_part(int sprite)
     return (cur_sprite);
 }
 
-void			draw_pistol(t_weapons *wpn, t_player *pl)
+void			draw_pistol(t_gun *wpn, t_player *pl)
 {
     static float velocity;//how fast are we going to see the animation of the gun
     if (wpn->sprite_counter == 1)

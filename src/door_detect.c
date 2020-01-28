@@ -41,6 +41,9 @@ static int	door_bool(int dist, float degree)
 ** **************************************************************************
 */
 
+
+
+
 static int	door_vert_find(t_player *pl, t_vector3 *vec, int s_nb)
 {
 	int	dist;
@@ -83,7 +86,6 @@ static int	door_dist(t_player *pl, int s_nb)
 	t_vector3	vec2;
 	int			tmp_dist;
 
-	tmp_dist = 6;
 	tmp_dist = door_vert_find(pl, &vec, s_nb);
 	vec2.x = pl->anglecos;
 	vec2.y = pl->anglesin;
@@ -110,9 +112,7 @@ int			door_detect(t_player *pl)
 	int	door_sec_nb;
 
 	i = -1;
-	s_nb = -1;
 	dist = 5;
-	tmp_dist = 0;
 	door_sec_nb = -1;
 	while (++i < pl->sectors[pl->sector].npoints)
 	{

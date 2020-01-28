@@ -6,13 +6,14 @@
 /*   By: drafe <drafe@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/26 15:29:11 by drafe             #+#    #+#             */
-/*   Updated: 2020/01/26 16:22:11 by drafe            ###   ########.fr       */
+/*   Updated: 2020/01/28 11:27:18 by nshelly          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TEXTURE_H
 # define TEXTURE_H
 # include "wolf3d.h"
+# include "player.h"
 
 # define HEAD_SZ 18
 # define BPP 16
@@ -20,9 +21,6 @@
 # define IMG_W 6
 # define IMG_TYPE 2
 # define COLOR_MAP 1
-# define ID_LENGTH 0
-
-
 
 typedef struct		s_color
 {
@@ -37,7 +35,7 @@ typedef struct		s_texture
 	t_color			*pixels;
 	unsigned int	w;
 	unsigned int	h;
-	unsigned int	edit;
+	//unsigned int	edit;
 }					t_texture;
 
 #endif

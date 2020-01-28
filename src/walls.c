@@ -51,12 +51,21 @@ int			scr_nxt(t_scaler *i)
     return (i->result);
 }
 
+
+
+static int hexcolor( int r, int g, int b)
+{
+	return ((r<<16) | (g<<8) | b);
+}
+
 void draw_walls(int x, t_player *pl, int wall, int n)
 {
     unsigned	txty;
     int			y;
     int        *pix;
     int         color;
+    int 		hex;
+    unsigned int 		p;
     t_scaler    ty;
 
     if(wall == 0)
@@ -74,9 +83,10 @@ void draw_walls(int x, t_player *pl, int wall, int n)
         pl->y1 = pl->ceil.cya;
         pl->y2 = pl->ceil.cyb;
     }
-    ty = scalar_create(pl->floor.ya, pl->y1, pl->floor.yb, 0, pl->srf->w - 1);
+    ty = scalar_create(pl->floor.ya, pl->y1, pl->floor.yb, 0, pl->tex[0].w - 1);
     y = pl->y1;
-    pix = (int *)pl->srf->pixels;
+    //pix = (int *)pl->srf->pixels;
+   	pix = (int*)pl->srf->pixels;
     pl->y1 = clamp(pl->y1, 0, WIN_H-1);//??
     pl->y2 = clamp(pl->y2, 0, WIN_H-1);//??
     if(pl->y2 >= pl->y1)
@@ -89,9 +99,12 @@ void draw_walls(int x, t_player *pl, int wall, int n)
             txty = scr_nxt(&ty);
             color = color_transoform(ft_get_pixel(
                     pl->img[n],
-                    pl->txtx % pl->img[n]->w,
-                    txty % pl->img[n]->h), pl->light);
-            pix[y * WIN_W + x] = color;
+                    pl->txtx % pl->srf->w,
+                    txty % pl->srf->h), pl->light);
+			p = ((txty % pl->srf->h) * pl->tex[0].w + (pl->txtx % pl->srf->w)% pl->tex[0].w);//formula = y*w + x
+            hex = hexcolor(pl->tex[0].pixels[p].r, pl->tex[0].pixels[p].g, pl->tex[0].pixels[p].b);
+            pix[y * WIN_W + x] = hex;//color;
+            //dddd
 
         }
     }

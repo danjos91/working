@@ -13,16 +13,15 @@
 # include <math.h>
 # include <string.h>
 # include <libft.h>
-# include <sys/stat.h>//???
+# include <sys/stat.h>
 # include "constants.h"
-# include "help.h"
+# include "door.h"
 # include "engine.h"
 # include "events.h"
-# include "gun.h"
-# include "door.h"
-# include "texture.h"
+# include "help.h"
 # include "player.h"
 # include "sky.h"
+# include "texture.h"
 # include "textures.h"
 
 /*			but_detect.c			*/
@@ -63,7 +62,7 @@ void		engine_begin(t_player *pl);
 int			engine_scale(t_player *pl, int sx1, int sx2);
 
 /*			engine_exp.c			*/
-int			engine_cross(t_player *pl, int sec_n, unsigned s);
+int			engine_cross(t_player *pl);
 void		engine_put_lines(t_player *pl, int neib);
 
 /*			events_1.c			*/
@@ -77,11 +76,6 @@ void		events_jumps(t_sub_ev *se, t_player *pl, t_sect_ops *op, t_others *ot);
 /*			load_file.c			*/
 t_player	*load_next(t_player *pl);
 void		load_file(char *ag, t_player *pl);
-
-/*			load_textures.c			*/
-t_texture	*load_textures(t_player *pl);
-void		texture_init(t_player *pl);
-SDL_Texture	*texture_new(t_player *pl);
 
 /*			motion.c			*/
 void		motion_chk(t_sect_ops *op, t_player *player, t_others *ot, t_sub_ev *se);
@@ -98,22 +92,14 @@ void		door(t_player *pl, t_sub_ev *se);
 /*			vector_1.c			*/
 t_vector3	ft_vec3_create(t_vector3 *orig, t_vector3 *dest);
 double		ft_vec3_magnitude(t_vector3 this);
-t_vector3	ft_vec3_add(t_vector3 this, t_vector3 rhs);
-t_vector3	ft_vec3_sub(t_vector3 this, t_vector3 rhs);
-t_vector3	ft_vec3_cross_product(t_vector3 this, t_vector3 rhs);
 
 /*			vector_2.c			*/
 double		ft_vec3_dot_product(t_vector3 this, t_vector3 rhs);
-double		ft_vec3_cosinus(t_vector3 this, t_vector3 rhs);
-t_vector3	ft_vec3_opposite(t_vector3 this);
-t_vector3	ft_vec3_scalar_product(t_vector3 this, double k);
 t_vector3	ft_vec3_normalize(t_vector3 vtc);
 
 /*          vectors_2.c*/
 float	vec2_cos(t_vector3 vec1, t_vector3 vec2);
 
-/*			sdl_addons.c			*/
-SDL_Rect	*ft_create_rect(int w, int h, int x, int y);
-void		ft_sdl_error();
+t_texture			*load_textures(t_player *pl);
 
 #endif
